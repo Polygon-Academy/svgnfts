@@ -1,7 +1,6 @@
+import { formatEther } from "@ethersproject/units";
 import React, { useState } from "react";
-import { useBalance } from "eth-hooks";
-
-const { utils } = require("ethers");
+import { useBalance } from "../hooks";
 
 /*
   ~ What it does? ~
@@ -32,24 +31,32 @@ const { utils } = require("ethers");
 export default function Balance(props) {
   const [dollarMode, setDollarMode] = useState(true);
 
+  // const [listening, setListening] = useState(false);
+
   const balance = useBalance(props.provider, props.address);
+
   let floatBalance = parseFloat("0.00");
+
   let usingBalance = balance;
 
-  if (typeof props.balance !== "undefined") usingBalance = props.balance;
-  if (typeof props.value !== "undefined") usingBalance = props.value;
+  if (typeof props.balance !== "undefined") {
+    usingBalance = props.balance;
+  }
+  if (typeof props.value !== "undefined") {
+    usingBalance = props.value;
+  }
 
   if (usingBalance) {
-    const etherBalance = utils.formatEther(usingBalance);
+    const etherBalance = formatEther(usingBalance);
     parseFloat(etherBalance).toFixed(2);
     floatBalance = parseFloat(etherBalance);
   }
 
   let displayBalance = floatBalance.toFixed(4);
 
-  const price = props.price || props.dollarMultiplier || 1;
+  const price = props.price || props.dollarMultiplier;
 
-  if (dollarMode) {
+  if (price && dollarMode) {
     displayBalance = "$" + (floatBalance * price).toFixed(2);
   }
 

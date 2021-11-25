@@ -35,6 +35,41 @@ export default function EtherInput(props) {
 
   const currentValue = typeof props.value !== "undefined" ? props.value : value;
 
+  const option = title => {
+    if (!props.price) return "";
+    return (
+      <div
+        style={{ cursor: "pointer" }}
+        onClick={() => {
+          if (mode === "USD") {
+            setMode("ETH");
+            setDisplay(currentValue);
+          } else {
+            setMode("USD");
+            if (currentValue) {
+              const usdValue = "" + (parseFloat(currentValue) * props.price).toFixed(2);
+              setDisplay(usdValue);
+            } else {
+              setDisplay(currentValue);
+            }
+          }
+        }}
+      >
+        {title}
+      </div>
+    );
+  };
+
+  let prefix;
+  let addonAfter;
+  if (mode === "USD") {
+    prefix = "$";
+    addonAfter = option("USD 🔀");
+  } else {
+    prefix = "Ξ";
+    addonAfter = option("ETH 🔀");
+  }
+
   useEffect(() => {
     if (!currentValue) {
       setDisplay("");
@@ -45,33 +80,9 @@ export default function EtherInput(props) {
     <Input
       placeholder={props.placeholder ? props.placeholder : "amount in " + mode}
       autoFocus={props.autoFocus}
-      prefix={mode === "USD" ? "$" : "Ξ"}
+      prefix={prefix}
       value={display}
-      addonAfter={
-        !props.price ? (
-          ""
-        ) : (
-          <div
-            style={{ cursor: "pointer" }}
-            onClick={() => {
-              if (mode === "USD") {
-                setMode("ETH");
-                setDisplay(currentValue);
-              } else {
-                setMode("USD");
-                if (currentValue) {
-                  const usdValue = "" + (parseFloat(currentValue) * props.price).toFixed(2);
-                  setDisplay(usdValue);
-                } else {
-                  setDisplay(currentValue);
-                }
-              }
-            }}
-          >
-            {mode === "USD" ? "USD 🔀" : "ETH 🔀"}
-          </div>
-        )
-      }
+      addonAfter={addonAfter}
       onChange={async e => {
         const newValue = e.target.value;
         if (mode === "USD") {
