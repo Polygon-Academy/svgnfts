@@ -2,7 +2,7 @@ Mint SVGNFTS instead of JPGs!
 
 
 ```bash
-git clone https://github.com/austintgriffith/scaffold-eth.git loogies-svg-nft
+git clone https://github.com/Polygon-Academy/svgnfts
 
 cd loogies-svg-nft
 
